@@ -1,0 +1,326 @@
+<div class="flex h-[calc(100vh-6rem)] md:h-[calc(100vh-8rem)] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md relative">
+  
+  <div [class.hidden]="!isMobileDirectoryOpen()" 
+       class="w-full md:w-80 md:flex border-r border-slate-200 flex flex-col bg-slate-50/50 shrink-0 h-full min-h-0">
+    
+    <div class="p-4 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+      <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Messages</h3>
+    </div>
+
+    <div class="flex-1 overflow-y-auto divide-y divide-slate-100">
+      @if (isLoadingDirectory()) {
+        <div class="p-8 flex flex-col items-center justify-center space-y-2 text-slate-400">
+          <div class="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-[10px] uppercase font-bold tracking-wider">Loading Directory...</span>
+        </div>
+      } @else {
+        @for (alumni of alumniDirectory(); track alumni.id) {
+          <button (click)="selectAlumni(alumni)" 
+                  [class.bg-cyan-50/80]="activeRecipient()?.id === alumni.id"
+                  [class.border-l-4]="activeRecipient()?.id === alumni.id"
+                  class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-all duration-200 border-l-4 border-transparent">
+            
+            <div class="flex items-center space-x-3 min-w-0">
+              <div class="relative shrink-0">
+                <img [src]="alumni.photo ? 'http://192.168.0.115:8080/' + alumni.photo : '/logo.png'" 
+                     class="w-11 h-11 rounded-xl object-cover ring-2 ring-slate-100 shadow-sm" alt="">
+              </div>
+              <div class="truncate">
+                <h4 class="text-xs font-bold text-slate-800 truncate">{{ alumni.First_name }}</h4>
+                  <p class="text-xs text-gray-500 truncate flex items-center gap-1">
+  @if (alumni.last_message) {
+    
+    @if (alumni.last_sender_id === currentUserId) {
+      <span [class.text-blue-500]="alumni.last_is_read === 1" class="font-bold flex-shrink-0">
+        {{ alumni.last_is_read === 1 ? '✓✓' : '✓' }}
+      </span>
+    }
+
+    <span>{{ alumni.last_message }}</span>
+
+  } @else {
+    <span class="text-gray-400 italic">No conversation yet</span>
+  }
+</p>
+              </div>
+            </div>
+
+            @if (alumni.unread_count > 0) {
+              <span class="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white shadow-sm shrink-0">
+                {{ alumni.unread_count }}
+              </span>
+            }
+          </button>
+        }
+      }
+    </div>
+  </div>
+  
+  <section [class.hidden]="isMobileDirectoryOpen()" 
+           class="w-full h-full min-h-0 flex flex-1 flex-col bg-slate-100/60 relative overflow-hidden">
+    @if (activeRecipient()) {
+      
+      <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-white shadow-xs shrink-0 z-10">
+        <div class="flex items-center space-x-3 min-w-0">
+          <button (click)="isMobileDirectoryOpen.set(true)" 
+                  class="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-xl md:hidden transition mr-1">
+            <span class="text-lg">←</span>
+          </button>
+
+          <img [src]="activeRecipient().photo ? 'http://192.168.0.115:8080/' + activeRecipient().photo : '/logo.png'" 
+               class="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-100 shadow-sm" alt="">
+          <div class="truncate">
+  <h3 class="text-xs font-bold text-slate-800 truncate">
+    {{ activeRecipient().First_name }} {{ activeRecipient().last_name || '' }}
+  </h3>
+  
+  <span class="flex items-center gap-1.5 mt-0.5">
+    <span class="w-1.5 h-1.5 rounded-full" 
+          [ngClass]="isOnline(activeRecipient().last_seen) ? 'bg-green-500' : 'bg-slate-300'">
+    </span>
+    
+    <span class="text-[10px] text-slate-400 font-medium">
+      @if (isOnline(activeRecipient().last_seen)) {
+        Online
+      } @else {
+        Last seen {{ activeRecipient().last_seen | date:'shortTime' }}
+      }
+    </span>
+  </span>
+</div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 shrink-0">
+          @if (selectedMessageIds().length > 0) {
+            <span class="text-[11px] font-bold text-cyan-600 px-2 bg-cyan-50 rounded-lg mr-1">
+              {{ selectedMessageIds().length }} selected
+            </span>
+            <button (click)="deleteSelectedMessages()" class="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition" title="Delete Selected">
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+            <button (click)="cancelSelection()" class="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition" title="Cancel Selection">
+              <fa-icon [icon]="faXmark" class="text-base"></fa-icon>
+            </button>
+          } @else {
+            <button (click)="clearEntireChat()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition" title="Clear Chat Logs">
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/50 min-h-0">
+        @if (isLoadingChat()) {
+          <div class="h-full flex flex-col items-center justify-center space-y-2 text-slate-400">
+            <div class="w-6 h-6 border-2 border-cyan-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-[10px] uppercase font-bold tracking-wider">Loading Conversation Histology...</span>
+          </div>
+        } @else {
+          @for (msg of chatMessages(); track msg.id) {
+            <div class="relative overflow-hidden w-full select-none py-0.5 cursor-pointer"
+                 (touchstart)="onTouchStart($event, msg.id)"
+                 (touchmove)="onTouchMove($event, msg.id)"
+                 (touchend)="onTouchEnd($event, msg)"
+                 (contextmenu)="$event.preventDefault(); toggleMessageSelection(msg.id)">
+
+              <div class="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-cyan-600 opacity-0 transition-opacity pointer-events-none"
+                   [style.opacity]="activeSwipeMessageId() === msg.id && currentSwipeOffset() > 20 ? '1' : '0'">
+                <fa-icon [icon]="faReply" class="text-sm"></fa-icon>
+              </div>
+
+              <div class="transition-transform duration-75 ease-out flex items-end gap-2 w-full"
+                   [style.transform]="activeSwipeMessageId() === msg.id ? 'translateX(' + currentSwipeOffset() + 'px)' : 'none'"
+                   [ngClass]="msg.sender_id === currentUserId ? 'justify-end' : 'justify-start'">
+
+                @if (msg.sender_id === currentUserId) {
+                  @if (msg.message_type !== 'image') {
+                    <div [class.ring-2]="selectedMessageIds().includes(msg.id)"
+                         [class.ring-cyan-400]="selectedMessageIds().includes(msg.id)"
+                         class="bg-cyan-600 text-white max-w-[75%] min-w-[140px] p-2.5 rounded-2xl rounded-br-none shadow-xs text-xs leading-relaxed flex flex-col transition-all">
+                      @if (msg.message_type === 'document' && msg.file_path) {
+                        <div class="mb-2 p-2 rounded-xl bg-black/10 border border-white/10 flex flex-col space-y-1">
+                          <span class="font-semibold text-[11px] block truncate max-w-xs">📎 Document Asset</span>
+                          <div class="flex items-center space-x-2 text-[10px] font-bold">
+                            <button type="button" (click)="openDocModal(msg.file_path)" class="text-cyan-200 hover:underline">Preview</button>
+                            <a [href]="'http://192.168.0.115:8080/' + msg.file_path" target="_blank" class="text-white hover:underline">Download</a>
+                          </div>
+                        </div>
+                      }
+                      @if (msg.message_text) {
+                        <p class="whitespace-pre-wrap block break-words">{{ msg.message_text }}</p>
+                      }
+                      <div class="flex items-center justify-end space-x-1 mt-1 opacity-75 self-end">
+                        <span class="text-[9px] text-cyan-100">{{ msg.created_at | date:'shortTime' }}</span>
+                        <fa-icon [icon]="msg.is_read ? faCheckDouble : faCheck" class="text-[10px]" [ngClass]="msg.is_read ? 'text-cyan-200' : 'text-cyan-300/60'"></fa-icon>
+                      </div>
+                    </div>
+                  }
+                  @if (msg.message_type === 'image' && msg.file_path) {
+                    <div class="flex flex-col items-end max-w-[70%] md:max-w-[45%]">
+                      <div (click)="openImageModal(msg.file_path)" 
+                           [class.ring-4]="selectedMessageIds().includes(msg.id)"
+                           [class.ring-cyan-400]="selectedMessageIds().includes(msg.id)"
+                           class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer transition-all">
+                        <img [src]="('http://192.168.0.115:8080/' + msg.file_path) | safeUrl" class="w-full h-auto max-h-[260px] object-cover block" alt="">
+                      </div>
+                      <div class="flex items-center space-x-1 mt-1 opacity-70 text-[10px]">
+                        <span class="text-slate-500">{{ msg.created_at | date:'shortTime' }}</span>
+                        <fa-icon [icon]="msg.is_read ? faCheckDouble : faCheck" class="text-[10px] text-cyan-600"></fa-icon>
+                      </div>
+                    </div>
+                  }
+                }
+
+                @if (msg.sender_id !== currentUserId) {
+                  @if (msg.message_type !== 'image') {
+                    <div [class.ring-2]="selectedMessageIds().includes(msg.id)"
+                         [class.ring-cyan-400]="selectedMessageIds().includes(msg.id)"
+                         class="bg-white border border-slate-200 text-slate-800 max-w-[75%] min-w-[140px] p-2.5 rounded-2xl rounded-bl-none shadow-xs text-xs leading-relaxed flex flex-col transition-all">
+                     @if (msg.message_type === 'document') {
+                    <div class="mb-2 p-2.5 rounded-xl bg-slate-50 border border-gray-100 flex flex-col space-y-1.5">
+                      <span class="font-semibold text-[11px] block truncate max-w-xs text-gray-700 flex items-center gap-1">
+                        📄 {{ msg.file_path.split('/').pop()?.replace(/^\d+_/, '') || 'Attachment Document' }}
+                      </span>
+                      <div class="flex items-center space-x-2 text-[10px] font-bold text-cyan-600">
+                       <button type="button" (click)="openDocModal(msg.file_path)" class="hover:underline">Preview</button>
+                            <a [href]="'http://192.168.0.115:8080/' + msg.file_path" target="_blank" class="hover:underline">Download</a>
+                      </div>
+                    </div>
+                  }
+                      @if (msg.message_text) {
+                        <p class="whitespace-pre-wrap block break-words">{{ msg.message_text }}</p>
+                      }
+                      <div class="flex items-center justify-end mt-1 opacity-60 self-end">
+                        <span class="text-[9px] text-slate-500">{{ msg.created_at | date:'shortTime' }}</span>
+                      </div>
+                    </div>
+                  }
+                  @if (msg.message_type === 'image' || (msg.file_path && (msg.file_path.endsWith('.jpg') || msg.file_path.endsWith('.png')))) {
+                    <div class="flex flex-col items-start max-w-[70%] md:max-w-[45%]">
+                      <div (click)="openImageModal(msg.file_path)" 
+                           [class.ring-4]="selectedMessageIds().includes(msg.id)"
+                           [class.ring-cyan-400]="selectedMessageIds().includes(msg.id)"
+                           class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer transition-all">
+                        <img [src]="'http://192.168.0.115:8080/' + msg.file_path" class="w-full h-auto max-h-[260px] object-cover block" alt="">
+                      </div>
+                      <div class="mt-1 opacity-60 text-[10px]">
+                        <span class="text-slate-500">{{ msg.created_at | date:'shortTime' }}</span>
+                      </div>
+                    </div>
+                  }
+                }
+
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="p-3 border-t border-slate-200 bg-white shrink-0 relative z-20">
+        
+        @if (replyingToMessage()) {
+          <div class="mb-2 p-2 bg-slate-50 border-l-4 border-cyan-500 rounded-r-xl flex items-center justify-between text-xs animate-fade-in">
+            <div class="truncate pr-4">
+              <span class="block font-bold text-cyan-600 text-[10px] uppercase tracking-wide">Replying Context</span>
+              <p class="text-slate-500 truncate text-[11px]">{{ replyingToMessage().message_text || 'Attachment File' }}</p>
+            </div>
+            <button (click)="replyingToMessage.set(null)" class="text-slate-400 hover:text-slate-600 p-1">
+              <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
+          </div>
+        }
+
+        @if (selectedFile()) {
+          <div class="mb-2 text-[11px] text-cyan-600 font-semibold bg-cyan-50 px-3 py-1.5 rounded-lg flex items-center justify-between w-max max-w-full shadow-xs">
+            <span class="truncate">📎 {{ selectedFile()?.name }}</span>
+            <button type="button" (click)="selectedFile.set(null)" class="ml-3 text-rose-500 font-bold hover:text-rose-700 text-sm">×</button>
+          </div>
+        }
+
+        <form (ngSubmit)="transmitMessage()" class="flex items-center space-x-2 relative">
+          
+          <input type="file" 
+                 id="fileAttachmentInput" 
+                 (change)="onFileSelected($event)" 
+                 class="hidden" 
+                 accept="image/*" /> 
+          <input type="file" 
+                 id="docAttachmentInput" 
+                 (change)="onFileSelected($event)" 
+                 class="hidden" 
+                 accept=".pdf,.doc,.docx,.zip" />
+
+          <div class="relative">
+            <button type="button" (click)="isFileMenuOpen.set(!isFileMenuOpen())" 
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl w-10 h-10 flex items-center justify-center transition shrink-0">
+              <fa-icon [icon]="faPaperclip" class="text-sm"></fa-icon>
+            </button>
+
+            @if (isFileMenuOpen()) {
+              <div class="absolute bottom-12 left-0 bg-white border border-slate-200 shadow-xl rounded-xl p-1.5 min-w-[160px] z-50 flex flex-col space-y-1">
+                <button type="button" 
+                        (click)="triggerFileInput('fileAttachmentInput'); isFileMenuOpen.set(false)" 
+                        class="flex items-center space-x-2.5 p-2 rounded-lg hover:bg-slate-50 w-full text-left text-xs text-slate-700 transition">
+                  <fa-icon [icon]="faImage" class="text-cyan-500 w-4 text-center"></fa-icon>
+                  <span>Photo Gallery</span>
+                </button>
+                
+                <button type="button" 
+                        (click)="triggerFileInput('docAttachmentInput'); isFileMenuOpen.set(false)" 
+                        class="flex items-center space-x-2.5 p-2 rounded-lg hover:bg-slate-50 w-full text-left text-xs text-slate-700 transition">
+                  <fa-icon [icon]="faFileLines" class="text-indigo-500 w-4 text-center"></fa-icon>
+                  <span>Documents</span>
+                </button>
+              </div>
+            }
+          </div>
+
+          <input type="text" [ngModel]="typedText()" (ngModelChange)="typedText.set($event)" name="message" placeholder="Type a message..." 
+                 class="flex-1 border border-slate-200 bg-slate-50/50 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-cyan-400 focus:bg-white transition" />
+          
+          <button type="submit" [disabled]="isSendingMessage()" class="bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl w-10 h-10 flex items-center justify-center transition shrink-0 disabled:opacity-50">
+            @if (isSendingMessage()) {
+              <div class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            } @else {
+              <fa-icon [icon]="faPaperPlane" class="text-xs"></fa-icon>
+            }
+          </button>
+        </form>
+      </div>
+
+    } @else {
+      <div class="hidden md:flex flex-1 flex-col items-center justify-center text-center p-8 bg-slate-50/30">
+        <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-4 shadow-inner"></div>
+        <h4 class="text-xs font-black text-slate-700 uppercase tracking-wider">No Chat Session Active</h4>
+        <p class="text-[11px] text-slate-400 mt-1 max-w-xs leading-relaxed">Select an Alumni to message.</p>
+      </div>
+    }
+  </section>
+</div>
+
+@if (previewImageUrl()) {
+  <div class="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xs transition-opacity duration-300" (click)="closeImageModal()">
+    <button (click)="closeImageModal()" class="absolute top-6 right-6 text-white bg-white/10 hover:bg-white/20 rounded-full w-12 h-12 flex items-center justify-center border border-white/20 transition">
+      <fa-icon [icon]="faXmark" class="text-lg"></fa-icon>
+    </button>
+    <div class="relative max-w-4xl max-h-[80vh] p-1" (click)="$event.stopPropagation()">
+      <img [src]="'http://192.168.0.115:8080/' + previewImageUrl()" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl" alt="">
+    </div>
+  </div>
+}
+
+@if (previewDocUrl()) {
+  <div class="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xs" (click)="closeDocModal()">
+    <button (click)="closeDocModal()" class="absolute top-6 right-6 text-white bg-white/10 hover:bg-white/20 rounded-full w-12 h-12 flex items-center justify-center border border-white/20 transition">
+      <fa-icon [icon]="faXmark" class="text-lg"></fa-icon>
+    </button>
+    <div class="w-full max-w-5xl h-[85vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col" (click)="$event.stopPropagation()">
+      <div class="px-6 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Document Preview Viewer</h3>
+      </div>
+      <div class="flex-1 bg-slate-100 relative">
+        <iframe [src]="('http://192.168.0.115:8080/' + previewDocUrl()) | safeUrl" class="w-full h-full border-0" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+      </div>
+    </div>
+  </div> 
+}

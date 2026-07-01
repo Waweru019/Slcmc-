@@ -1,0 +1,190 @@
+
+<div *ngIf="userProfile()" class="max-w-7xl mx-auto p-4 md:p-8 bg-slate-50 min-h-screen text-slate-800 font-sans antialiased">
+   <div class="mb-6 flex justify-end">
+    <button (click)="downloadCV()" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-sm hover:shadow transition-all duration-200 cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+      </svg>
+      Download Professional CV
+    </button>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+    
+    <div class="space-y-6">
+      <!-- Personal Details -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Personal Details</h3>
+        </div>
+        <div class="p-6 flex flex-col items-center">
+          <div class="relative group">
+            <img [src]="userProfile()?.user?.photo ? 'http://localhost/slcmc/' + userProfile()?.user?.photo : '/avatar.png'"
+                 alt="User Photo"
+                 class="w-32 h-32 rounded-full object-cover ring-4 ring-slate-100 group-hover:ring-indigo-50 transition-all">
+          </div>
+          
+          <h2 class="text-xl font-bold text-slate-900 mt-4">{{ userProfile()?.user?.First_name }}</h2>
+          <p class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full mt-2">
+            Class of {{ userProfile()?.user?.Graduation_class }}
+          </p>
+          
+          <div class="mt-6 w-full border-t border-slate-100 pt-5 text-sm">
+            <div class="grid grid-cols-[120px_1fr] gap-x-2 gap-y-3.5 items-baseline">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Email</span>
+              <span class="font-medium text-slate-700 break-all select-all">{{ userProfile()?.user?.Email }}</span>
+              
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Phone</span>
+              <span class="font-medium text-slate-700">{{ userProfile()?.user?.Phone_number }}</span>
+              
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Date of Birth</span>
+              <span class="font-medium text-slate-700">{{ userProfile()?.user?.Dob | date:'mediumDate' }}</span>
+              
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Gender</span>
+              <span class="font-medium text-slate-700">{{ userProfile()?.user?.Gender }}</span>
+              
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">National ID</span>
+              <span class="font-medium text-slate-700">{{ userProfile()?.user?.id_no }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employment History -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Employment History</h3>
+        </div>
+        <div class="p-5 space-y-4">
+          <div *ngIf="!userProfile()?.history?.length" class="text-sm text-slate-400 italic py-2">
+            No career history entries logged.
+          </div>
+          <div *ngFor="let past of userProfile()?.history" class="group border-b border-slate-100 last:border-0 pb-3.5 last:pb-0">
+            <h4 class="font-semibold text-sm text-slate-800 group-hover:text-indigo-600 transition-colors">
+              {{ past.employer_name }}
+            </h4>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">{{ past.role }}</p>
+            <p class="text-[11px] text-slate-400 font-medium mt-1">
+              {{ past.from_date | date: 'MMM yyyy' }} - {{ past.to_date ? (past.to_date | date: 'MMM yyyy') : 'Present' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Academic Record -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Academic Record</h3>
+        </div>
+        <div class="p-5 text-sm">
+          <div class="grid grid-cols-[120px_1fr] gap-x-2 gap-y-3.5 items-baseline">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Programme</span>
+            <span class="font-semibold text-slate-800 uppercase text-xs tracking-wide">{{ userProfile()?.academic?.programme_name }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cohort</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.academic?.cohort_name }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Year Joined</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.academic?.year_joined }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Graduation</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.academic?.graduation_year }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Employment -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Current Employment</h3>
+        </div>
+        <div class="p-5 text-sm">
+          <div class="grid grid-cols-[120px_1fr] gap-x-2 gap-y-3.5 items-baseline">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Type</span>
+            <span class="font-semibold text-sm text-slate-800">{{ userProfile()?.current?.employment_type }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Position</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.current?.role }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Employer</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.current?.employer_name }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Location</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.current?.work_county }} County</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Since</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.current?.start_date | date: 'MMMM yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Further Education -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Further Education</h3>
+        </div>
+        <div class="p-5 text-sm">
+          <div class="grid grid-cols-[120px_1fr] gap-x-2 gap-y-3.5 items-baseline">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Institution</span>
+            <span class="font-semibold text-slate-800">{{ userProfile()?.education?.institution }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Field</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.education?.field_of_study }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.education?.year_completed }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Professional Membership -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Professional Membership</h3>
+        </div>
+        <div class="p-5 text-sm">
+          <div class="grid grid-cols-[120px_1fr] gap-x-2 gap-y-3.5 items-baseline">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Organization</span>
+            <span class="font-medium text-slate-700">{{ userProfile()?.membership?.organization }}</span>
+            
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Member ID</span>
+            <span class="font-mono font-bold text-slate-800 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 text-xs w-max">
+              {{ userProfile()?.membership?.membership_id }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social & Contact -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-200 hover:shadow-md">
+        <div class="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
+          <h3 class="text-slate-900 font-bold text-sm tracking-wide uppercase">Social & Contact</h3>
+        </div>
+        <div class="p-5 text-sm space-y-4">
+          <div>
+            <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider mb-1">LinkedIn</span>
+            <a *ngIf="userProfile()?.social?.linkedin" [href]="userProfile()?.social?.linkedin" target="_blank" 
+               class="text-indigo-600 font-semibold hover:text-indigo-800 hover:underline inline-flex items-center gap-1 break-all">
+              {{ userProfile()?.social?.linkedin }}
+            </a>
+            <span *ngIf="!userProfile()?.social?.linkedin" class="text-slate-400 italic text-xs">Not provided</span>
+          </div>
+          
+          <div class="pt-3.5 border-t border-slate-100">
+            <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider mb-1">Address</span>
+            <p class="font-medium text-slate-700">{{ userProfile()?.social?.physical_address }}</p>
+          </div>
+          
+          <div class="pt-3.5 border-t border-slate-100">
+            <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider mb-1">Home County</span>
+            <p class="font-medium text-slate-700">{{ userProfile()?.social?.home_county || 'Unspecified' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

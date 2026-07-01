@@ -1,0 +1,601 @@
+<div class="w-full space-y-6">
+   <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs max-w-md">
+  <div class="flex items-center justify-between mb-2">
+    <div>
+      <h4 class="text-xs font-black text-slate-700 uppercase tracking-wider">Profile Completeness</h4>
+      <p class="text-[11px] text-slate-400 mt-0.5">
+  @if (profileCompleteness() === 0) {
+    Get started by filling out your personal details.
+  } @else if (profileCompleteness() > 0 && profileCompleteness() < 50) {
+    Off to a great start! Keep going to finish setting up.
+  } @else if (profileCompleteness() >= 50 && profileCompleteness() < 100) {
+    Almost there! Just a few more sections to unlock all features.
+  } @else if (profileCompleteness() === 100) {
+    Congratulations!! Your profile is 100% complete. 
+  }
+</p>
+    </div>
+    <span class="text-xs font-black px-2 py-1 bg-cyan-50 text-cyan-600 rounded-lg">
+      {{ profileCompleteness() }}%
+    </span>
+  </div>
+
+  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden relative">
+    <div class="bg-cyan-600 h-full rounded-full transition-all duration-500 ease-out"
+         [style.width.%]="profileCompleteness()"
+         [ngClass]="{
+           'bg-rose-500': profileCompleteness() < 35,
+           'bg-amber-500': profileCompleteness() >= 35 && profileCompleteness() < 70,
+           'bg-green-500': profileCompleteness() >= 70
+         }">
+    </div>
+  </div>
+</div>
+  <div class="w-full p-1 bg-gray-100/80 rounded-2xl border border-gray-200/50 backdrop-blur-md overflow-x-auto scrollbar-none select-none">
+    <div class="flex flex-nowrap items-center min-w-[980px] lg:min-w-full gap-1.5 p-1">
+      
+      <button type="button" (click)="currentStep = 1" 
+        [ngClass]="currentStep === 1 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+        
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 1 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+        <span [ngClass]="currentStep === 1 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Personal Details
+        </span>
+      </button>
+
+      <button type="button" (click)="currentStep = 2" 
+        [ngClass]="currentStep === 2 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+        
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 2 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <span class="text-[11px] font-bold">2</span>
+        </div>
+        <span [ngClass]="currentStep === 2 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Academic Record
+        </span>
+      </button>
+
+      <button type="button" (click)="currentStep = 3" 
+        [ngClass]="currentStep === 3 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+        
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 3 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <span class="text-[11px] font-bold">3</span>
+        </div>
+        <span [ngClass]="currentStep === 3 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Current Employment
+        </span>
+      </button>
+
+      <button type="button" (click)="currentStep = 4" 
+        [ngClass]="currentStep === 4 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+        
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 4 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <span class="text-[11px] font-bold">4</span>
+        </div>
+        <span [ngClass]="currentStep === 4 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Employment History
+        </span>
+      </button>
+
+      <button type="button" (click)="currentStep = 5" 
+        [ngClass]="currentStep === 5 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+       
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 5 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <span class="text-[11px] font-bold">5</span>
+        </div>
+        <span [ngClass]="currentStep === 5 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Further Education
+        </span>
+      </button>
+
+      <button type="button" (click)="currentStep = 6" 
+        [ngClass]="currentStep === 6 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+     
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 6 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <span class="text-[11px] font-bold">6</span>
+        </div>
+        <span [ngClass]="currentStep === 6 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Membership
+        </span>
+      </button>
+
+      <button type="button" (click)="currentStep = 7" 
+        [ngClass]="currentStep === 7 ? 'bg-white text-gray-900 border-gray-200 shadow-sm' : 'bg-transparent text-gray-500 border-transparent hover:text-gray-800 hover:bg-white/40'" 
+        class="flex-1 min-w-[140px] rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all duration-300 border cursor-pointer h-20 md:h-22 group relative">
+        
+        
+
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg transition-colors duration-300"
+          [ngClass]="currentStep === 7 ? 'bg-rose-50 text-rose-600' : 'bg-gray-200/60 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600'">
+          <span class="text-[11px] font-bold">7</span>
+        </div>
+        <span [ngClass]="currentStep === 7 ? 'font-semibold' : 'font-medium'" class="text-[11px] md:text-xs tracking-tight transition-colors duration-300 line-clamp-1">
+          Social & Contact
+        </span>
+      </button>
+
+    </div>
+  </div>
+
+  <div class="w-full mb-6">
+    <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+      <span>Step {{ currentStep }} of {{ totalSteps }}</span>
+      <span>{{ progress }}%</span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+      <div class="bg-cyan-500 h-2 transition-all duration-300" [style.width.%]="progress"></div>
+    </div>
+  </div>
+
+  <div class="w-full bg-white p-6 md:p-8 rounded-2xl shadow-md border border-gray-100 transition-all duration-300">
+    
+    <form *ngIf="currentStep === 1" [formGroup]="registerForm" (ngSubmit)="submitStep1()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">1. Personal Information</h3>
+@if (sectionCompletion()[1]) {
+  <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Personal Details Profile is complete.
+      </p>
+    </div>
+  </div>
+}
+@else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Personal details are incomplete. Fill you details to complete your profile
+      </p>
+    </div>
+  </div>
+}
+      <div *ngIf="successMsg" class="bg-green-100 text-red-700 p-3 rounded mb-3">
+        {{ successMsg }}
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">First Name</label>
+          <input type="text" formControlName="First_name" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Date of Birth</label>
+          <input type="date" formControlName="Dob" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Gender</label>
+          <select formControlName="Gender" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+            <option value="" disabled>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">National ID</label>
+          <input type="text" formControlName="id_no" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Graduation Class</label>
+          <input type="text" formControlName="Graduation_class" placeholder="e.g., 2024" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Phone Number</label>
+          <input type="tel" formControlName="Phone_number" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Email</label>
+          <input type="email" formControlName="Email" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Photo</label>
+          <input type="file" (change)="onFileSelected($event)" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+          <div *ngIf="imagePreview" class="mt-3 p-2 border border-dashed border-gray-300 rounded-lg bg-gray-50 flex flex-col items-center justify-center">
+            <p class="text-xs text-gray-500 mb-2">Image Preview:</p>
+            <img [src]="imagePreview" alt="Profile Preview" class="w-32 h-32 object-cover rounded-full shadow-md border-2 border-cyan-400">
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end pt-4">
+        <button  (click)="nextStep()" type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">
+          Update personal details
+        </button>
+      </div>
+    </form>
+
+    <form *ngIf="currentStep === 2" [formGroup]="academicForm" (ngSubmit)="submitStep2()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">2. Academic Record</h3>
+      @if (sectionCompletion()[2]) {
+  <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Academic Records is complete.
+      </p>
+    </div>
+  </div>
+}
+@else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Accademic Records info are incomplete. Fill you details to complete your profile
+      </p>
+    </div>
+  </div>
+}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Programme Name <span class="text-red-500">*</span></label>
+          <select formControlName="programme_name" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white text-gray-700">
+            <option value="" disabled selected>-- Choose Target Qualification Course --</option>
+            @for (prog of programmesList(); track prog.id) {
+              <option [value]="prog.programme">{{ prog.programme }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Year Joined <span class="text-red-500">*</span></label>
+          <input type="date" formControlName="year_joined" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Cohort Name <span class="text-red-500">*</span></label>
+          <select formControlName="cohort_name" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white text-gray-700">
+            <option value="" disabled selected> Choose Enrolled Intake Class</option>
+            @for (item of cohortsList(); track item.id) {
+              <option [value]="item.cohort">{{ item.cohort }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Year of Graduation <span class="text-red-500">*</span></label>
+          <input type="number" formControlName="graduation_year" placeholder="e.g., 2026" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Registration Number <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="reg_number" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+      </div>
+      <div class="flex justify-between pt-4">
+        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
+        <button (click)="nextStep()"  type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Academic Record</button>
+      </div>
+    </form>
+
+    <form *ngIf="currentStep === 3" [formGroup]="employmentForm" (ngSubmit)="submitStep3()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">3. Current Employment</h3>
+
+@if (sectionCompletion()[3]) {
+  @if (isNotEmployed()) {
+    <div class="w-full bg-slate-50 border-l-4 border-slate-400 rounded-r-lg p-4 animate-fade-in my-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="min-w-0">
+        <h4 class="text-sm font-bold text-slate-700 tracking-wide">Status: Not Currently Employed</h4>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+          You've marked this section as not applicable. If your employment status changes, you can add your details anytime.
+        </p>
+      </div>
+      <button type="button" 
+        (click)="resetEmploymentStatus()" 
+        class="text-xs font-bold text-cyan-600 hover:text-cyan-700 underline shrink-0 whitespace-nowrap">
+  Add Employment Details
+</button>
+
+    </div>
+  } @else {
+    <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+      <div class="min-w-0">
+        <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+        <p class="text-xs text-slate-700 font-medium mt-1">
+          Your Current Employment details are fully up to date.
+        </p>
+      </div>
+    </div>
+  }
+
+} @else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-amber-900 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-amber-800 font-medium mt-1">
+        Please complete the employment status prompt to update this section.
+      </p>
+    </div>
+  </div>
+}
+
+@if (showEmploymentCheckModal()) {
+  <div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-fade-in">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-5 border border-slate-200 shadow-xl" (click)="$event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div class="mb-3">
+        <h4 class="text-sm font-black text-slate-800 uppercase tracking-wider">Employment Status Update</h4>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Are you currently employed or working in a professional placement?
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end space-x-2 mt-5">
+        <!-- Option: No -->
+        <button type="button" 
+                (click)="handleEmploymentResponse(false)" 
+                class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl transition">
+          No, I am not
+        </button>
+        
+        <!-- Option: Yes -->
+        <button type="button" 
+                (click)="handleEmploymentResponse(true)" 
+                class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition">
+          Yes, I am
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Current Employer/Facility Name <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="employer_name" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Job Title <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="role" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Employment Type <span class="text-red-500">*</span></label>
+          <select formControlName="employment_type" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+            <option value="" disabled>Select Employment Type</option> 
+            <option value="Full Time">Full Time</option>
+            <option value="Part Time">Part Time</option>
+            <option value="Locum">Locum</option>
+          </select>
+        </div>
+        <div> 
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">County of Work <span class="text-red-500">*</span></label> 
+          <select formControlName="work_county" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white text-gray-700">
+            <option value="" disabled>Select a county</option>
+            @for (county of counties; track county) {
+              <option [value]="county">{{ county }}</option>
+            }
+          </select> 
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Start Date <span class="text-red-500">*</span></label>
+          <input type="date" formControlName="start_date" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+      </div>
+      <div class="flex justify-between pt-4">
+        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
+        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Current Employer</button>
+      </div>
+    </form>
+
+    <form *ngIf="currentStep === 4" [formGroup]="historyForm" (ngSubmit)="submitStep4()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">4. Employment History</h3>
+      @if (sectionCompletion()[4]) {
+  <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Employment History is complete.
+      </p>
+    </div>
+  </div>
+}
+@else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Employement History info are incomplete. Fill you details to complete your profile
+      </p>
+    </div>
+  </div>
+}
+      
+      <div formArrayName="employers" class="space-y-6 mb-4">
+        @for (group of employersArray.controls; track group; let i = $index) {
+          <div [formGroupName]="i" class="p-4 border border-gray-200 rounded-xl relative bg-gray-50/50">
+            
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-bold text-cyan-600 uppercase tracking-wider">Position {{ i + 1 }}</span>
+              @if (employersArray.length > 1) {
+                <button type="button" (click)="removeEmployer(i)" class="text-xs text-red-500 hover:text-red-700 font-semibold transition">
+                   Remove
+                </button>
+              }
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Previous Employer</label>
+                <input type="text" formControlName="employer_name" placeholder="Company Name" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Role Held</label>
+                <input type="text" formControlName="role" placeholder="Job Title" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">From</label>
+                <input type="date" formControlName="from_date" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white text-gray-700">
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">To</label>
+                <input type="date" formControlName="to_date" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white text-gray-700">
+              </div>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <div class="flex justify-start mb-6">
+        <button type="button" (click)="addEmployer()" class="px-4 py-2 text-xs font-bold text-white bg-gray-500 hover:bg-gray-600 rounded-lg transition shadow-sm uppercase tracking-wider">
+           Add Another Job
+        </button>
+      </div>
+
+      <div class="flex justify-between pt-4 border-t">
+        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
+        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Employment History</button>
+      </div>
+    </form>
+
+    <form *ngIf="currentStep === 5" [formGroup]="furthereducation" (ngSubmit)="submitStep5()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">5. Further Education</h3>
+      @if (sectionCompletion()[5]) {
+  <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Further Education  is complete.
+      </p>
+    </div>
+  </div>
+}@else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Further Education info are incomplete. Please fill your details to complete your profile
+      </p>
+    </div>
+  </div>
+}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Institution Attended <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="institution" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Field Of Study <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="field_of_study" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Year Completed <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="year_completed" placeholder="e.g., 2025" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+      </div>
+      <div class="flex justify-between pt-4">
+        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
+        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Further Education</button>
+      </div>
+    </form>
+
+    <form *ngIf="currentStep === 6" [formGroup]="membership" (ngSubmit)="submitStep6()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">6. Professional Licensing & Boards</h3>
+        @if (sectionCompletion()[6]) {
+  <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Professional Licensing & Boards  is complete.
+      </p>
+    </div>
+  </div>
+}
+@else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Proffessional Boards info are incomplete. Fill you details to complete your profile
+      </p>
+    </div>
+  </div>
+}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Organization / Licensing Body <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="organization" placeholder="e.g., NCK, KENIA" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Membership / License Number <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="membership_id" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+      </div>
+      <div class="flex justify-between pt-4">
+        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
+        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Professional Membership</button>
+      </div>
+    </form>
+
+    <form *ngIf="currentStep === 7" [formGroup]="socialForm" (ngSubmit)="submitStep7()">
+      <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">7. Contact Profiles & Socials</h3>
+       @if (sectionCompletion()[7]) {
+  <div class="w-full bg-[#A7F3D0]/50 border-l-4 border-[#059669] rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide">Congratulations!!</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Contact Profiles & Socials  is complete.
+      </p>
+    </div>
+  </div>
+}@else {
+  <div class="w-full bg-amber-50 border-l-4 border-amber-500 rounded-r-lg p-4 animate-fade-in my-3">
+    <div class="min-w-0">
+      <h4 class="text-sm font-bold text-slate-800 tracking-wide"> Pending Update</h4>
+      <p class="text-xs text-slate-700 font-medium mt-1">
+        Your Social Conctact info  are incomplete. Please fill the fields below to complete your profile
+      </p>
+    </div>
+  </div>
+}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">LinkedIn Profile URL <span class="text-red-500">*</span></label>
+          <input type="url" formControlName="linkedin" placeholder="https://linkedin.com/in/..." class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Physical Address <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="physical_address" placeholder="Street, Building, Suite" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
+        </div>
+        <div> 
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Home County <span class="text-red-500">*</span></label> 
+          <select formControlName="home_county" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition bg-white text-gray-700">
+            <option value="" disabled>Select Home County</option>
+            @for (county of counties; track county) {
+              <option [value]="county">{{ county }}</option>
+            }
+          </select> 
+        </div>
+      </div>
+      <div class="flex justify-between pt-4">
+        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
+        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Contact Profile</button>
+      </div>
+    </form>
+
+  </div>
+</div> 

@@ -1,0 +1,108 @@
+<div class="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
+  <!-- Header -->
+  <div class="border-b border-slate-100 pb-5 mb-6">
+    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+      Privacy Settings
+    </h2>
+    <p class="text-sm text-slate-500 mt-1">Control what information is visible to other alumni profiles.</p>
+  </div>
+
+  <!-- Settings List -->
+  <div class="space-y-4">
+    
+    <!-- Email Toggle -->
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showEmail" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show Email Address</label>
+        <span class="text-xs text-slate-400">Allow alumni to see your primary email.</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input 
+type="checkbox"
+[(ngModel)]="settings.show_email" class="sr-only peer">
+        
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+
+    <!-- Phone Toggle -->
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showPhone" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show Phone Number</label>
+        <span class="text-xs text-slate-400">Display your contact number on your profile.</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.show_phone" class="sr-only peer">
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+
+    <!-- Employment Toggle -->
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showEmployment" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show Employment History</label>
+        <span class="text-xs text-slate-400">Share your current company and job title.</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.show_employment" class="sr-only peer" checked>
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+
+    <!-- Education Toggle -->
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showEducation" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show Education Details</label>
+        <span class="text-xs text-slate-400">Show graduation year and degree type.</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.show_education" class="sr-only peer" checked>
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+
+    <!-- LinkedIn Toggle -->
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showLinkedin" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show contact</label>
+        <span class="text-xs text-slate-400">Make your contact details availabe ie linkind link</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.show_contact" class="sr-only peer">
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showLinkedin" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show Memebership</label>
+        <span class="text-xs text-slate-400">Show your membership details</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.show_membership" class="sr-only peer">
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+    <div class="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors">
+      <div>
+        <label for="showLinkedin" class="text-sm font-semibold text-slate-700 block cursor-pointer">Show further education</label>
+        <span class="text-xs text-slate-400">let user see what you attained after slcmc</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.show_further_education" class="sr-only peer">
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+      </label>
+    </div>
+
+  </div>
+
+  <!-- Action Button -->
+  <div class="mt-8 pt-5 border-t border-slate-100 flex justify-end">
+   <button 
+(click)="savePrivacy()"
+class="bg-cyan-600 text-white px-6 py-2 rounded-xl">
+
+Save Changes
+
+</button>
+  </div>
+</div>

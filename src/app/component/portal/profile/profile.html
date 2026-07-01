@@ -1,0 +1,151 @@
+<div class="max-w-7xl mx-auto px-4 pt-6">
+  <div class="relative max-w-md mx-auto sm:mx-0">
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+    <input 
+      type="text" 
+      [value]="searchQuery()"
+      (input)="onSearchChange($event)"
+      placeholder="Search alumni by name..." 
+      class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm transition duration-150 ease-in-out placeholder-gray-500 text-gray-900"
+    >
+  </div>
+</div>
+
+  
+<div *ngIf="errorMessage()" class="max-w-7xl mx-auto px-4 mt-4">
+  <div class="p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg text-red-700 text-sm font-medium">
+    <p>{{ errorMessage() }}</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 p-4 max-w-7xl mx-auto">
+  
+  <div *ngFor="let a of filteredAlumniList()" class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition duration-200 flex flex-col overflow-hidden relative">
+    
+    <div class="h-14 sm:h-20 bg-gradient-to-r from-slate-200 to-cyan-100"></div>
+
+    <div class="p-3 sm:p-5 pt-0 flex-grow flex flex-col items-center text-center relative">
+      
+      <div class="w-16 h-16 sm:w-24 sm:h-24 -mt-8 sm:-mt-12 mb-2 sm:mb-3 bg-white p-0.5 sm:p-1 rounded-full shadow-sm border border-gray-100 overflow-hidden flex items-center justify-center">
+        <img 
+          [src]="a.photo ? 'http://192.168.0.115:8080/' + a.photo : '/logo.png'" 
+          class="w-full h-full object-cover rounded-full"
+          alt="Profile photo"
+        >
+      </div>
+
+      <h3 class="text-sm sm:text-lg font-bold text-gray-900 hover:text-blue-700 hover:underline transition cursor-pointer line-clamp-1 mb-0.5">
+        {{ a.First_name }}
+      </h3>
+
+      <p *ngIf="a.Employer || a.Role" class="text-[11px] sm:text-sm text-gray-600 font-medium line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mb-2">
+        <span *ngIf="a.Role">{{ a.Role }}</span>
+        <span *ngIf="a.Role && a.Employer"> at </span>
+        <span *ngIf="a.Employer" class="text-blue-600 font-semibold">{{ a.Employer }}</span>
+      </p>
+
+      <p *ngIf="a.home_county" class="text-[10px] sm:text-xs text-gray-400 font-normal mb-3 sm:mb-4 flex flex-wrap items-center gap-1 justify-center line-clamp-1">
+        <span>{{ a.home_county }}</span>
+        <span *ngIf="a.Address" class="hidden sm:inline"> • {{ a.Address }}</span>
+      </p>
+
+      <hr class="w-full border-gray-100 mb-3 sm:mb-4">
+
+      <div class="w-full space-y-2 text-left text-[11px] sm:text-xs text-gray-600 flex-grow">
+        
+        <div *ngIf="a.Programme || a.GraduationYear" class="bg-gray-50 rounded-lg p-2 border border-gray-100">
+          <p class="font-semibold text-gray-500 uppercase tracking-wider text-[9px] mb-1">Education</p>
+          <p *ngIf="a.Programme" class="font-medium text-gray-900 line-clamp-1">{{ a.Programme }}</p>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 gap-0.5 mt-1 text-[10px] sm:text-xs">
+            <span *ngIf="a.YearJoined" class="hidden sm:inline">Joined: {{ a.YearJoined }}</span>
+            <span *ngIf="a.GraduationYear" class="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded self-start sm:self-auto">Class of {{ a.GraduationYear }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="a.MembershipOrg" class="p-1 px-2 border-l-2 border-cyan-400 bg-cyan-50/40 rounded-r">
+          <p class="font-medium text-gray-900 text-[11px] sm:text-xs line-clamp-1">{{ a.MembershipOrg }}</p>
+          <p *ngIf="a.MembershipID" class="text-gray-400 text-[10px] sm:text-[11px]">ID: {{ a.MembershipID }}</p>
+        </div>
+
+        <div *ngIf="a.Email || a.Phone_number" class="hidden sm:block pt-2 space-y-1 border-t border-dashed border-gray-100 text-xs">
+          <p *ngIf="a.Email" class="truncate flex items-center gap-1.5"><span class="text-gray-500 font-medium">Email:</span> {{ a.Email }}</p>
+          <p *ngIf="a.Phone_number" class="flex items-center gap-1.5"><span class="text-gray-500 font-medium">Phone:</span> {{ a.Phone_number }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="p-2 sm:p-3 bg-gray-50 border-t border-gray-100 flex gap-1.5 items-center justify-stretch">
+      <button 
+        (click)="triggerDirectMessage(a)"
+        class="flex-1 py-1.5 text-center text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50 border border-blue-600 rounded-full transition duration-150 flex items-center justify-center gap-1 shadow-sm">
+        Message
+      </button>
+
+      <a 
+        *ngIf="a.LinkedIn" 
+        [href]="a.LinkedIn" 
+        target="_blank" 
+        class="p-1.5 sm:p-2 bg-white text-gray-500 hover:text-blue-600 hover:bg-blue-50 border border-gray-200 rounded-full transition duration-150 flex items-center justify-center shadow-sm"
+      >
+        <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between border-t border-gray-200 bg-white rounded-xl shadow-sm mt-4 mb-8">
+  <div class="flex-1 flex justify-between sm:hidden">
+    <button 
+      (click)="goToPage(currentPage() - 1)" 
+      [disabled]="currentPage() === 1"
+      class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+      Previous
+    </button>
+    <span class="text-xs text-gray-700 self-center">Page {{ currentPage() }} of {{ totalPages() }}</span>
+    <button 
+      (click)="goToPage(currentPage() + 1)" 
+      [disabled]="currentPage() === totalPages()"
+      class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+      Next
+    </button>
+  </div>
+  
+  <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm text-gray-700">
+        Showing page <span class="font-medium">{{ currentPage() }}</span> of <span class="font-medium">{{ totalPages() }}</span> pages
+      </p>
+    </div>
+    <div>
+      <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+        <button 
+          (click)="goToPage(currentPage() - 1)" 
+          [disabled]="currentPage() === 1"
+          class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+          <span class="sr-only">Previous</span>
+          &larr;
+        </button>
+        
+        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-50 text-sm font-medium text-blue-600">
+          {{ currentPage() }}
+        </span>
+
+        <button 
+          (click)="goToPage(currentPage() + 1)" 
+          [disabled]="currentPage() === totalPages()"
+          class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+          <span class="sr-only">Next</span>
+          &rarr;
+        </button>
+      </nav>
+    </div>
+  </div>
+</div>

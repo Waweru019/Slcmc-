@@ -1,0 +1,174 @@
+<!-- ========================================================================= -->
+<!-- INSTITUTION HEADER (Preserved as requested)                              -->
+<!-- ========================================================================= -->
+<nav class="flex items-center p-4 bg-white border-b-4 border-cyan-400 shadow-sm">
+  <div class="flex items-center space-x-4">
+    <img src="/logo.png" alt="SLCMC Logo" class="h-16 md:h-20 w-auto object-contain">
+    <div class="h-12 w-0.5 bg-gray-300"></div>
+    <div>
+      <span class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">
+        Archdiocese of Nyeri
+      </span>
+      <h1 class="text-xl md:text-2xl font-bold text-fuchsia-700 uppercase">
+        Sister Leonella
+      </h1>
+      <h2 class="text-2xl md:text-3xl font-bold text-fuchsia-700 uppercase leading-none">
+        Consolata Medical College
+      </h2>
+      <p class="text-xs italic text-blue-600 font-semibold mt-1">
+        The Leading College of Choice
+      </p>
+    </div>
+  </div>
+</nav>
+
+<div class="min-h-screen bg-slate-50/50">
+
+<!-- ========================================================================= -->
+<!-- HERO SECTION                                                              -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
+  
+  <!-- LEFT CONTENT -->
+  <div class="space-y-6">
+    <p class="uppercase text-xs tracking-wider font-bold text-fuchsia-700">
+      Alumni Community
+    </p>
+
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
+      Stay connected with your classmates and your college.
+    </h1>
+
+    <p class="text-base md:text-lg text-slate-600 max-w-xl leading-relaxed">
+      Welcome back. This portal is your dedicated space to keep in touch with fellow graduates, find professional mentoring, and follow the latest updates from Sister Leonella Consolata Medical College.
+    </p>
+
+    <div class="flex flex-wrap gap-4 pt-2">
+      <a routerLink="/login" class="px-6 py-3 bg-slate-900 text-white rounded-lg font-medium text-sm hover:bg-slate-800 transition shadow-sm">
+        Alumni Login
+      </a>
+      <a routerLink="/register" class="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 transition shadow-sm">
+        Register an Account
+      </a>
+    </div>
+  </div>
+
+  <!-- RIGHT IMAGE SLIDER -->
+  <div class="relative">
+    <div class="h-80 md:h-96 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+      @if(sliderImages().length > 0){
+        <img [src]="'http://localhost/slcmc/' + sliderImages()[currentSlide()].image_path"
+             [alt]="sliderImages()[currentSlide()].alt_text"
+             class="w-full h-full object-cover transition-opacity duration-1000">
+        
+        
+      }
+    </div>
+
+    <div class="flex justify-center gap-2 mt-4">
+      @for(slide of sliderImages(); track slide.id){
+        <span class="w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors"
+              [class.bg-slate-800]="currentSlide() === $index">
+        </span>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- WHY THE PORTAL MATTERS                                                   -->
+<!-- ========================================================================= -->
+<section class="max-w-4xl mx-auto px-6 py-16">
+  <h2 class="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-12 tracking-tight">
+    Why Join the Alumni Portal?
+  </h2>
+
+  <div class="relative pl-6 sm:pl-8">
+    <!-- Softened vertical line -->
+    <div class="absolute left-[11px] top-2 bottom-2 w-[2px] bg-slate-200"></div>
+
+    <!-- ITEM 1 -->
+    <div class="relative mb-10 group">
+      
+      <div>
+        <h3 class="text-base md:text-lg font-bold text-slate-800">Reconnect with Old Classmates</h3>
+        <p class="text-slate-600 mt-1 text-sm leading-relaxed max-w-2xl">
+          Find your former peers, catch up on where everyone is working now, and keep campus friendships alive.
+        </p>
+      </div>
+    </div>
+
+    <!-- ITEM 2 -->
+    <div class="relative mb-10 group">
+     
+      <div>
+        <h3 class="text-base md:text-lg font-bold text-slate-800">Professional Networking & Mentorship</h3>
+        <p class="text-slate-600 mt-1 text-sm leading-relaxed max-w-2xl">
+          Share career opportunities, seek professional guidance from experienced alumni, or offer your own mentorship to recent graduates entering the medical field.
+        </p>
+      </div>
+    </div>
+
+    <!-- ITEM 3 -->
+    <div class="relative mb-10 group">
+      
+      <div>
+        <h3 class="text-base md:text-lg font-bold text-slate-800">Stay Linked to the College</h3>
+        <p class="text-slate-600 mt-1 text-sm leading-relaxed max-w-2xl">
+          Get direct updates on clinical training resources, institutional milestones, and ways to support the next generation of students.
+        </p>
+      </div>
+    </div>
+
+    <!-- ITEM 4 -->
+    <div class="relative group">
+     
+      <div>
+        <h3 class="text-base md:text-lg font-bold text-slate-800">Share Your Achievements</h3>
+        <p class="text-slate-600 mt-1 text-sm leading-relaxed max-w-2xl">
+          Let the community celebrate your career milestones, certifications, and specialized contributions to healthcare.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- MISSION AND VISION                                                       -->
+<!-- ========================================================================= -->
+<section class="max-w-5xl mx-auto px-6 pb-24">
+  <div class="grid md:grid-cols-2 gap-8">
+    
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-xs relative overflow-hidden">
+      
+      <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3">Our Mission</h2>
+      <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+        To train competent, compassionate, and innovative healthcare and technical professionals for patient-centered care across the globe.
+      </p>
+    </div>
+
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-xs relative overflow-hidden">
+      
+      <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3">Our Vision</h2>
+      <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+        To be a premier institution that trains highly competent healthcare and vocational professionals to deliver holistic, transformative care driven by Christ's mission.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- FOOTER (Preserved as requested)                                          -->
+<!-- ========================================================================= -->
+<footer class="w-full bg-slate-50 border-t border-slate-200 py-6">
+  <p class="text-center text-[11px] text-slate-500 tracking-wide">
+    &copy; 2026 
+    <span class="text-fuchsia-700 font-extrabold uppercase">
+      Sister Leonella Consolata Medical College
+    </span>.
+    All Rights Reserved.
+  </p>
+</footer>
+ 
+</div>
