@@ -183,7 +183,7 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">First Name</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1">Full  Name</label>
           <input type="text" formControlName="First_name" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
         </div>
         <div>
@@ -224,9 +224,21 @@
         </div>
       </div>
       <div class="flex justify-end pt-4">
-        <button  (click)="nextStep()" type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">
-          Update personal details
-        </button>
+        <button 
+      type="submit" 
+      [disabled]="isSubmitting" 
+      class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+      
+      <!-- If saving is true, show the animated spinner circle -->
+      @if (isSubmitting) {
+        <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        Saving Step 1...
+      } 
+      <!-- If not saving, show the default button text -->
+      @else {
+        Next Step
+      }
+    </button>
       </div>
     </form>
 
@@ -285,9 +297,19 @@
         </div>
       </div>
       <div class="flex justify-between pt-4">
-        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
-        <button (click)="nextStep()"  type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Academic Record</button>
-      </div>
+  <button type="button" (click)="prevStep()" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider disabled:opacity-50">
+    Back
+  </button>
+  
+  <button type="submit" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    @if (isSubmitting) {
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Saving...
+    } @else {
+      Next Step
+    }
+  </button>
+</div>
     </form>
 
     <form *ngIf="currentStep === 3" [formGroup]="employmentForm" (ngSubmit)="submitStep3()">
@@ -396,9 +418,19 @@
         </div>
       </div>
       <div class="flex justify-between pt-4">
-        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
-        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Current Employer</button>
-      </div>
+  <button type="button" (click)="prevStep()" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider disabled:opacity-50">
+    Back
+  </button>
+  
+  <button type="submit" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    @if (isSubmitting) {
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Saving...
+    } @else {
+      Next Step
+    }
+  </button>
+</div>
     </form>
 
     <form *ngIf="currentStep === 4" [formGroup]="historyForm" (ngSubmit)="submitStep4()">
@@ -466,10 +498,20 @@
         </button>
       </div>
 
-      <div class="flex justify-between pt-4 border-t">
-        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
-        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Employment History</button>
-      </div>
+      <div class="flex justify-between pt-4">
+  <button type="button" (click)="prevStep()" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider disabled:opacity-50">
+    Back
+  </button>
+  
+  <button type="submit" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    @if (isSubmitting) {
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Saving...
+    } @else {
+      Next Step
+    }
+  </button>
+</div>
     </form>
 
     <form *ngIf="currentStep === 5" [formGroup]="furthereducation" (ngSubmit)="submitStep5()">
@@ -507,10 +549,20 @@
           <input type="text" formControlName="year_completed" placeholder="e.g., 2025" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition">
         </div>
       </div>
-      <div class="flex justify-between pt-4">
-        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
-        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Further Education</button>
-      </div>
+     <div class="flex justify-between pt-4">
+  <button type="button" (click)="prevStep()" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider disabled:opacity-50">
+    Back
+  </button>
+  
+  <button type="submit" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    @if (isSubmitting) {
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Saving...
+    } @else {
+      Next Step
+    }
+  </button>
+</div>
     </form>
 
     <form *ngIf="currentStep === 6" [formGroup]="membership" (ngSubmit)="submitStep6()">
@@ -546,9 +598,19 @@
         </div>
       </div>
       <div class="flex justify-between pt-4">
-        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
-        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Professional Membership</button>
-      </div>
+  <button type="button" (click)="prevStep()" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider disabled:opacity-50">
+    Back
+  </button>
+  
+  <button type="submit" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    @if (isSubmitting) {
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Saving...
+    } @else {
+      Next Step
+    }
+  </button>
+</div>
     </form>
 
     <form *ngIf="currentStep === 7" [formGroup]="socialForm" (ngSubmit)="submitStep7()">
@@ -591,10 +653,20 @@
           </select> 
         </div>
       </div>
-      <div class="flex justify-between pt-4">
-        <button type="button" (click)="prevStep()" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider">Back</button>
-        <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition shadow-sm uppercase tracking-wider">Update Contact Profile</button>
-      </div>
+     <div class="flex justify-between pt-4">
+  <button type="button" (click)="prevStep()" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition uppercase tracking-wider disabled:opacity-50">
+    Back
+  </button>
+  
+  <button type="submit" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition shadow-sm uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    @if (isSubmitting) {
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Submitting Finish...
+    } @else {
+      Complete Registration
+    }
+  </button>
+</div>
     </form>
 
   </div>

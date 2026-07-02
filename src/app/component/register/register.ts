@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router'; // 1. Added Router here
 import { ApiService } from '@core/services/api';
 
 @Component({
@@ -13,6 +13,7 @@ import { ApiService } from '@core/services/api';
 export class Register implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
+  private router = inject(Router); // 2. Injected Router using inject()
 
   registerForm!: FormGroup;
   isSubmitting = false;
@@ -45,36 +46,48 @@ export class Register implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
+  }
 
-    this.isSubmitting = true;
-    this.successMessage = '';
-    this.errorMessage = '';
+  this.isSubmitting = true;
+  this.successMessage = '';
+  this.errorMessage = '';
 
-    const payload = {
-      First_name: this.registerForm.value.fullName,
-      Dob: this.registerForm.value.dob,
-      id_no: this.registerForm.value.nationalId,
-      Gender: this.registerForm.value.gender,
-      Graduation_class: this.registerForm.value.graduationClass,
-      Phone_number: this.registerForm.value.phoneNumber,
-      Email: this.registerForm.value.email,
-      Password: this.registerForm.value.password
-    };
+  const payload = {
+    First_name: this.registerForm.value.fullName,
+    Dob: this.registerForm.value.dob,
+    id_no: this.registerForm.value.nationalId,
+    Gender: this.registerForm.value.gender,
+    Graduation_class: this.registerForm.value.graduationClass,
+    Phone_number: this.registerForm.value.phoneNumber,
+    Email: this.registerForm.value.email,
+    Password: this.registerForm.value.password
+  };
 
-    this.apiService.registerAlumniUser(payload).subscribe({
-      next: (response: any) => {
+  this.apiService.registerAlumniUser(payload).subscribe({
+    next: (response: any) => {
+      // 1. Double check that the response indicates a clear success state
+      if (response.status === 'success') {
         this.successMessage = response.message || 'Account created successfully!';
         this.registerForm.reset();
         this.isSubmitting = false;
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'An error occurred during registration.';
+        
+        // 2. Extract the user_id from the backend response and attach it to the route navigation 
+        this.router.navigate(['/verify'], {
+          queryParams: { user_id: response.user_id }
+        });
+      } else {
+        // Fallback case if status is returned but isn't explicitly 'success'
+        this.errorMessage = response.message || 'Registration failed.';
         this.isSubmitting = false;
       }
-    });
-  }
+    },
+    error: (err) => {
+      this.errorMessage = err.error?.message || 'An error occurred during registration.';
+      this.isSubmitting = false;
+    }
+  });
+}
 }

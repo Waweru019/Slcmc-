@@ -4,7 +4,7 @@ import { Register } from './component/register/register';
 import { Home } from './component/home/home';
 import { Portal } from './component/portal/portal';
 import { Admin } from './component/admin/admin';
-// 🛠️ Import your newly separated role guards
+import { OtpVerify } from './verify-otp/verify-otp';
 import { alumniGuard, adminGuard } from './auth-guard';
 import { ForgotPassword } from './component/forgot-passowrd/forgot-passowrd';
 
@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
    { path: 'resetpassword', component: ForgotPassword },
+   { path: 'verify', component: OtpVerify},
   
   //  Role-Protected Internal Workspaces
   { 

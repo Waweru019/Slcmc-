@@ -34,7 +34,9 @@ export class Personaldetails implements OnInit {
   cohortsList = signal<Cohort[]>([]);
   profileCompleteness = signal<number>(0);
   isNotEmployed = signal<boolean>(false);
-
+   isSubmitting: boolean = false;
+  errorMessage: string = '';
+  
   sectionCompletion = signal<{ [key: number]: boolean }>({
     1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false
   });
@@ -43,7 +45,17 @@ export class Personaldetails implements OnInit {
     return Math.round((this.currentStep / this.totalSteps) * 100);
   }
   
-  counties: string[] = [ 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Uasin Gishu' ];
+ 
+counties: string[] = [
+  'Mombasa', 'Kwale', 'Kilifi', 'Tana River', 'Lamu', 'Taita-Taveta',
+  'Garissa', 'Wajir', 'Mandera', 'Marsabit', 'Isiolo', 'Meru',
+  'Tharaka-Nithi', 'Embu', 'Kitui', 'Machakos', 'Makueni', 'Nyandarua',
+  'Nyeri', 'Kirinyaga', "Murang'a", 'Kiambu', 'Turkana', 'West Pokot',
+  'Samburu', 'Trans-Nzoia', 'Uasin Gishu', 'Elgeyo-Marakwet', 'Nandi', 'Baringo',
+  'Laikipia', 'Nakuru', 'Narok', 'Kajiado', 'Kericho', 'Bomet',
+  'Kakamega', 'Vihiga', 'Bungoma', 'Busia', 'Siaya', 'Kisumu',
+  'Homa Bay', 'Migori', 'Kisii', 'Nyamira', 'Nairobi'
+];
 
   constructor() {
     effect(() => {
@@ -107,120 +119,213 @@ export class Personaldetails implements OnInit {
   // STEP SUBMISSION METHODS 
   // ========================= 
   
-  submitStep1(): void { 
-    if (this.registerForm.invalid) { this.registerForm.markAllAsTouched(); return; }
-    
-    const formData = new FormData();
-    formData.append('step', '1');
-    formData.append('user_id', localStorage.getItem('userId') ?? '');
-    formData.append('First_name', this.registerForm.value.First_name || '');
-    formData.append('Dob', this.registerForm.value.Dob || '');
-    formData.append('Gender', this.registerForm.value.Gender || '');
-    formData.append('Email', this.registerForm.value.Email || '');
-    formData.append('Phone_number', this.registerForm.value.Phone_number || '');
-    formData.append('id_no', this.registerForm.value.id_no || '');
-    formData.append('Graduation_class', this.registerForm.value.Graduation_class || '');
-    formData.append('Password', 'defaultOrFieldPassword'); 
+ submitStep1(): void { 
+  // 1. If the form is invalid, stop immediately
+  if (this.registerForm.invalid) { 
+    this.registerForm.markAllAsTouched(); 
+    return; 
+  }
+  
+  // 2. Start loading and reset previous alerts
+  this.isSubmitting = true;
+  this.errorMessage = '';
+  this.successMsg = '';
 
-    if (this.selectedFile) { 
-      formData.append('photo', this.selectedFile, this.selectedFile.name); 
-    } 
+  const formData = new FormData();
+  formData.append('step', '1');
+  formData.append('user_id', localStorage.getItem('userId') ?? '');
+  formData.append('First_name', this.registerForm.value.First_name || '');
+  formData.append('Dob', this.registerForm.value.Dob || '');
+  formData.append('Gender', this.registerForm.value.Gender || '');
+  formData.append('Email', this.registerForm.value.Email || '');
+  formData.append('Phone_number', this.registerForm.value.Phone_number || '');
+  formData.append('id_no', this.registerForm.value.id_no || '');
+  formData.append('Graduation_class', this.registerForm.value.Graduation_class || '');
+  formData.append('Password', 'defaultOrFieldPassword'); 
 
-    this.apiService.submitStep1(formData).subscribe({ 
-      next: (res: any) => {
-        if (res.status === 'success') {
-          this.successMsg = res.message;
-          setTimeout(() => this.successMsg = '', 3000);
-          this.fetchAndEvaluateProfile();
-          this.nextStep();
-        }
-      }, 
-      error: (err) => console.error(err) 
-    }); 
+  if (this.selectedFile) { 
+    formData.append('photo', this.selectedFile, this.selectedFile.name); 
   } 
+
+  // 3. Fire the API call
+  this.apiService.submitStep1(formData).subscribe({ 
+    next: (res: any) => {
+      // Turn off loading spinner since request completed successfully
+      this.isSubmitting = false;
+
+      if (res.status === 'success') {
+        this.successMsg = res.message;
+        setTimeout(() => this.successMsg = '', 3000);
+        this.fetchAndEvaluateProfile();
+        this.nextStep();
+      } else {
+        // Handle backend-returned failures (e.g., status === 'error')
+        this.errorMessage = res.message || 'Something went wrong. Please try again.';
+      }
+    }, 
+    error: (err) => {
+      // Turn off loading spinner on network or server error
+      this.isSubmitting = false;
+      console.error(err);
+      
+      // Assign error message to be displayed dynamically in your HTML alert template
+      this.errorMessage = err.error?.message || 'Failed to connect to the server. Please check your internet connectivity.';
+    } 
+  }); 
+}
 
   submitStep2(): void { 
     if (this.academicForm.invalid) { this.academicForm.markAllAsTouched(); return; } 
+    
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     const payload = { step: 2, user_id: localStorage.getItem('userId'), ...this.academicForm.value }; 
     
     this.apiService.submitStep2(payload).subscribe({ 
       next: (res: any) => { 
+        this.isSubmitting = false;
         if (res.status === 'success') {
-          alert(res.message); 
+          alert(res.message || "Academic information updated successfully!"); 
           this.fetchAndEvaluateProfile();
           this.nextStep(); 
-        } 
+        } else {
+          this.errorMessage = res.message || 'Failed to update academic information.';
+        }
       }, 
-      error: (err) => console.error(err) 
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error(err);
+        this.errorMessage = err.error?.message || 'Server error occurred while saving academic info.';
+      }
     }); 
-  } 
+  }
 
   submitStep3(): void {
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     const payload = { step: 3, user_id: localStorage.getItem('userId'), ...this.employmentForm.value };
+    
     this.apiService.submitStep3(payload).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false;
         if (res && res.status === 'success') { 
-          alert(res.message);
+          alert(res.message || "Employment status updated successfully!");
           this.fetchAndEvaluateProfile();
           this.nextStep(); 
+        } else {
+          this.errorMessage = res?.message || 'Failed to update employment status.';
         }
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error(err);
+        this.errorMessage = err.error?.message || 'Server error occurred while saving employment info.';
+      }
     });
   }
 
   submitStep4(): void { 
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     const payload = { step: 4, user_id: localStorage.getItem('userId'), employers: this.employersArray.value };
+    
     this.apiService.submitStep4(payload).subscribe({ 
       next: (res: any) => { 
+        this.isSubmitting = false;
         if(res.status === 'success') {
+          alert(res.message || "Employer records saved successfully!");
           this.fetchAndEvaluateProfile();
           this.nextStep();
-        } 
+        } else {
+          this.errorMessage = res.message || 'Failed to update employer records.';
+        }
       }, 
-      error: (err) => console.error(err) 
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error(err);
+        this.errorMessage = err.error?.message || 'Server error occurred while saving employers.';
+      }
     }); 
   }
 
   submitStep5(): void { 
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     const payload = { step: 5, user_id: localStorage.getItem('userId'), ...this.furthereducation.value };
+    
     this.apiService.submitStep5(payload).subscribe({ 
       next: (res: any) => { 
+        this.isSubmitting = false;
         if(res.status === 'success') {
+          alert(res.message || "Further education info updated successfully!");
           this.fetchAndEvaluateProfile();
           this.nextStep();
-        } 
+        } else {
+          this.errorMessage = res.message || 'Failed to update further education records.';
+        }
       }, 
-      error: (err) => console.error(err) 
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error(err);
+        this.errorMessage = err.error?.message || 'Server error occurred while saving further education.';
+      }
     }); 
   } 
 
   submitStep6(): void { 
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     const payload = { step: 6, user_id: localStorage.getItem('userId'), ...this.membership.value };
+    
     this.apiService.submitStep6(payload).subscribe({ 
       next: (res: any) => { 
+        this.isSubmitting = false;
         if(res.status === 'success') {
+          alert(res.message || "Licensing and membership details saved successfully!");
           this.fetchAndEvaluateProfile();
           this.nextStep();
-        } 
+        } else {
+          this.errorMessage = res.message || 'Failed to update licensing info.';
+        }
       }, 
-      error: (err) => console.error(err) 
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error(err);
+        this.errorMessage = err.error?.message || 'Server error occurred while saving licensing board details.';
+      }
     }); 
   } 
 
   submitStep7(): void { 
-    const payload = { step: 7, user_id: localStorage.getItem('userId'), ...this.socialForm.value };
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
+    // Quick structural note: Double check if your reactive form property is called 
+    // 'this.socialForm' or 'this.socialContactForm' to avoid a template reference mismatch!
+    const payload = { step: 7, user_id: localStorage.getItem('userId'), ...this.socialForm.value }; 
+    
     this.apiService.submitStep7(payload).subscribe({ 
       next: (res: any) => { 
+        this.isSubmitting = false;
         if(res.status === 'success') {
           this.fetchAndEvaluateProfile();
-          alert("Profile Completed Successfully!"); 
-        } 
+          alert(res.message || "Profile Completed Successfully!"); 
+        } else {
+          this.errorMessage = res.message || 'Failed to submit final registration details.';
+        }
       }, 
-      error: (err) => console.error(err) 
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error(err);
+        this.errorMessage = err.error?.message || 'Server error occurred during final submission.';
+      }
     }); 
-  } 
-
+  }
   loadProgrammesDropdown(): void {
     this.apiService.getProgrammes().subscribe({
       next: (data) => this.programmesList.set(data),

@@ -26,7 +26,7 @@ export interface Cohort {
 export class Programs implements OnInit {
   private apiService = inject(ApiService);
 
-  // Form State variables using standard strings for stable ngModel integration
+  // Form State variables
   newProgrammeName = '';
   newCohortName = '';
   selectedProgrammeId: number | null = null;
@@ -42,6 +42,11 @@ export class Programs implements OnInit {
   selectedFileReference: File | null = null;
   selectedFileLabel = '';
 
+  // Loading States
+  isSubmittingProgramme = false;
+  isSubmittingCohort = false;
+  isSubmittingAsset = false;
+
   ngOnInit(): void {
     this.loadProgrammesDropdown();
     this.loadCohortDropdown();
@@ -54,7 +59,9 @@ export class Programs implements OnInit {
       return;
     }
 
+    this.isSubmittingProgramme = true; // Set loading state to true
     const body = new HttpParams().set('programme', name);
+
     this.apiService.addProgramme(body).subscribe({
       next: (res) => {
         console.log('Programme added successfully:', res);
@@ -62,7 +69,13 @@ export class Programs implements OnInit {
         this.loadProgrammesDropdown();
         alert('Programme registered successfully!');
       },
-      error: (err) => console.error('Error adding programme:', err)
+      error: (err) => {
+        console.error('Error adding programme:', err);
+        this.isSubmittingProgramme = false; // Turn off loading if it errors
+      },
+      complete: () => {
+        this.isSubmittingProgramme = false; // Safely reset flag on completion
+      }
     });
   }
 
@@ -74,6 +87,7 @@ export class Programs implements OnInit {
       return;
     }
 
+    this.isSubmittingCohort = true; // Set loading state to true
     const body = new HttpParams()
       .set('cohort', cohortName)
       .set('programme_id', String(progId));
@@ -82,9 +96,16 @@ export class Programs implements OnInit {
       next: (res) => {
         console.log('Cohort linked and added successfully:', res);
         this.newCohortName = '';
+        this.loadCohortDropdown(); // Make sure to refresh your view list data
         alert('Cohort class added and mapped to programme successfully!');
       },
-      error: (err) => console.error('Error adding cohort:', err)
+      error: (err) => {
+        console.error('Error adding cohort:', err);
+        this.isSubmittingCohort = false;
+      },
+      complete: () => {
+        this.isSubmittingCohort = false;
+      }
     });
   }
 
@@ -137,6 +158,7 @@ export class Programs implements OnInit {
       return;
     }
 
+    this.isSubmittingAsset = true; // Set loading state to true
     const networkPayload = new FormData();
     networkPayload.append('title', this.inputTitle.trim());
     networkPayload.append('alt_text', this.inputAltText.trim());
@@ -147,11 +169,18 @@ export class Programs implements OnInit {
         if (res.status === 'success') {
           this.toggleModalState(false);
           alert("Media profile record asset updated perfectly!");
+          // Ideally you'd have a refresh callback function here like this.loadMediaRecords()
         } else {
           alert("Upload execution error encountered: " + res.message);
         }
       },
-      error: (err) => console.error("Media multi-part stream operation aborted:", err)
+      error: (err) => {
+        console.error("Media multi-part stream operation aborted:", err);
+        this.isSubmittingAsset = false;
+      },
+      complete: () => {
+        this.isSubmittingAsset = false;
+      }
     });
   }
 }

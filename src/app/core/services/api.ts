@@ -233,4 +233,12 @@ editUser(payload: {
 deleteUser(payload: { user_id: number; admin_id: number }): Observable<any> {
   return this.http.post<any>(`${this.adminUrl}?action=deleteUser`, payload);
 }
+verifyOtp(payload: { user_id: number; otp_code: string }): Observable<any> {
+  return this.http.post<any>(`${this.adminUrl}?action=verify_otp`, payload);
+}
+
+resendOtp(payload: { user_id: number }): Observable<any> {
+  return this.http.post<any>(`${this.adminUrl}?action=resend_otp`, payload);
+}
+
 }
